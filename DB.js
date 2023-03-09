@@ -7,7 +7,10 @@ class DB {
         this.path = `${path}/${name}.json`;
     }
     create = (jsonData) => {
-        fs.writeFileSync(this.path, JSON.stringify(jsonData));
+        this.save(jsonData)
+    }
+    save = (list) => {
+        fs.writeFileSync(this.path, JSON.stringify(list));
     }
     get = () => {
         const content = fs.readFileSync(this.path, `utf-8`);
@@ -27,6 +30,17 @@ class DB {
         const list = this.get();
         const item = list.find(item => id == item.id);
         return item;
+    }
+    updateItem = (updatedItem, itemId) => {
+        const newList = this.getFilteredList((item) => item.id != itemId)
+        newList.push(updatedItem)
+        this.save(newList)
+    }
+    deleteItemById = (itemId) => this.save(this.getFilteredList((item) => item.id != itemId))
+    
+    getFilteredList = (filterCallback) => {
+        const list = this.get()
+        return list.filter(filterCallback)
     }
 };
 

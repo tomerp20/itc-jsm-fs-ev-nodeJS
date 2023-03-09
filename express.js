@@ -1,29 +1,23 @@
 const express = require('express');
 const app = express();
 
-//this "middleware" helps ys get the content of the response body
+//this "middleware" helps us get the content of the response body
 app.use(express.json())
 const { DB } = require('./DB.js');
 
-//Cors
+
 
 //Endpoint = combination of url (path) & http method
-app.get('/users', (req, res) => {
-    const users = new DB('users');
-    res.send(users.get())
-});
 
-app.post('/users', (req, res) => {
-    const users = new DB('users');
-    console.log(req.body);
-    const newUser = users.addItem(req.body);
-    res.send(newUser);
-})
 
-app.get('/tweets', (req, res) => {
-    const tweets = new DB('tweets');
-    res.send(tweets.get())
-});
+
+app.use('/users', require('./routes/users.route'));
+app.use('/tweets', require('./routes/tweets.route'));
+
+//Create tweets route, with all of the 5 EndPoints what the users route have.
+
+app.get('path', () => {})
+
 
 
 
