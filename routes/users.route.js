@@ -2,7 +2,8 @@ const express = require('express')
 const route = express.Router()
 const { DB } = require('../DB.js');
 const users = new DB('users');
-const { addUserValidation } = require('../dto/users.validation')
+const { userSchema } = require('../dto/user.schema')
+const { validateDto } = require('../dto/validate')
 /*
 1) Get    /users
 2) Get    /user/:id
@@ -20,7 +21,7 @@ route.get('/:id', (req, res) => {
     res.send(users.getItemById(id))
 });
 
-route.post('/', addUserValidation,(req, res) => {
+route.post('/', validateDto(userSchema),(req, res) => {
     const newUser = users.addItem(req.body);
     res.send(newUser);
 })

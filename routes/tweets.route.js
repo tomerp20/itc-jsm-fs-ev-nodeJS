@@ -1,7 +1,8 @@
 const express = require('express')
 const route = express.Router()
 const { DB } = require('../DB.js');
-
+const { tweetSchema }= require('../dto/tweet.schema')
+const { validateDto } = require('../dto/validate.js')
 const tweets = new DB('tweets');
 
 /*
@@ -22,18 +23,18 @@ route.get('/:id', (req, res) => {
     res.send(tweets.getItemById(id))
 });
 
-route.post('/', (req, res) => {
+route.post('/', validateDto(tweetSchema), (req, res) => {
     const newTweet = tweets.addItem(req.body);
     res.send(newTweet);
 })
-route.put('/:id',(req, res) => {
-    users.updateItem(req.body, req.params.id)
+route.put('/:id', validateDto(tweetSchema), (req, res) => {
+    tweets.updateItem(req.body, req.params.id)
     res.send(`tweet updated`)
 })
 
 route.delete('/:id', (req, res) => {
     const { id } = req.params
-    users.deleteItemById(id)
+    tweets.deleteItemById(id)
     res.send('tweet deleted')
 })
 
