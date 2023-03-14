@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-
+const cors = require('cors')
+app.use(cors())
 //this "middleware" helps us get the content of the response body
 app.use(express.json())
 const { DB } = require('./DB.js');
@@ -8,8 +9,6 @@ const { DB } = require('./DB.js');
 
 
 //Endpoint = combination of url (path) & http method
-
-
 
 app.use('/users', require('./routes/users.route'));
 app.use('/tweets', require('./routes/tweets.route'));

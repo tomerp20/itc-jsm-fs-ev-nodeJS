@@ -22,7 +22,7 @@ route.get('/:id', (req, res) => {
 
 route.post('/', addUserValidation,(req, res) => {
     const newUser = users.addItem(req.body);
-    res.send(newUser);
+    res.send(JSON.stringify(newUser));
 })
 route.put('/:id',(req, res) => {
     users.updateItem(req.body, req.params.id)

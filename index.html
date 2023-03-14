@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        Username: <input type="text" id="username" />
+        Email: <input type="email" id="email" />
+        Age:<input type="age" id="age" />
+        <button id="submit">Add User</button>
+
+        <span id="loading"></span>
+    </div>
+    <script>
+        const submitButton = document.getElementById('submit')
+        const username = document.getElementById('username')
+        const age = document.getElementById('age')
+        const email = document.getElementById('email')
+
+
+
+
+        submitButton.addEventListener('click', (e) => {
+            e.preventDefault()
+            fetch(`http://localhost:4000/users/`,{
+                method: 'POST',
+                headers: {
+                    ['content-type']:'application/json'
+                },
+                body: JSON.stringify({
+                    username: username.value,
+                    email:    email.value,
+                    age:      age.value,
+                })
+            }).then((response) => {
+                response.json().then((data) => {
+                    console.log(data)
+                })
+            })
+        })
+
+    </script>
+</body>
+
+</html>
