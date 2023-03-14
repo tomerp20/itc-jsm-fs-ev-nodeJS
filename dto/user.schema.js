@@ -12,7 +12,7 @@ const{ object, string, required, email, number, integer, positive} = require('yu
 */
 
 const userSchema = object({
-    username: string().required(),
+    username: string().required().strict(),
     email:  string().email().required(),
     age: number().integer().positive()
 })
