@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 //  const cors = require('cors')
 //  app.use(cors())
+const { validResponse , createdResponse } = require(`./lib/responseHandlers`)
 
 
 
@@ -40,22 +41,10 @@ app.use((req, res, next) => {
 app.use(express.json())
 
 app.use((req, res, next) => {
-    // res.ok = (data) => {
-    //     const response = validResponse(data)
-    //     console.log(response)
-    //     res.status(response.status).send(response.payload)
-    // }
-    // res.notOk = (response) => {
-    //     const response = errSchema(data)
-    //     res.status(response.status).send(response.payload)
-    // }
+    res.customSend = (responseHandler) => res.status(responseHandler.status).send(responseHandler.payload)
 
-
-    res.customSend = (responseHandler) => {
-        res.status(responseHandler.status).send(responseHandler.payload)
-    }
-
-
+    res.ok = (data) => res.customSend(validResponse(data))
+    res.create = (value) => res.customSend(createdResponse(value))
     next();
 })
 

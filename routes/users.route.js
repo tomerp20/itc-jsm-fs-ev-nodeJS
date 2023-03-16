@@ -4,7 +4,6 @@ const { DB } = require('../DB.js');
 const users = new DB('users');
 const { userSchema } = require('../dto/user.schema')
 const { validateDto } = require('../dto/validate')
-const { validResponse } = require(`../lib/responseHandlers`)
 
 /*
 1) Get    /users
@@ -16,7 +15,7 @@ const { validResponse } = require(`../lib/responseHandlers`)
 
 route.get('/', (req, res) => {
     const usersList = users.get();
-    res.customSend(validResponse(usersList))
+    res.ok(usersList)
 });
 
 route.get('/:id', (req, res, next) => {
@@ -24,12 +23,12 @@ route.get('/:id', (req, res, next) => {
     if(id == 0) {
         return next('Invalid id')
     }
-    res.customSend(validResponse(users.getItemById(id)))
+    res.ok(users.getItemById(id))
 });
 
 route.post('/', validateDto(userSchema),(req, res) => {
     const newUser = users.addItem(req.body);
-    res.send(JSON.stringify(newUser));
+    res.create(newUser);
 })
 route.put('/:id',(req, res) => {
     users.updateItem(req.body, req.params.id)
