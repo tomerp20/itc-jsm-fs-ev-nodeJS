@@ -1,7 +1,25 @@
 const express = require('express');
 const app = express();
-const cors = require('cors')
-app.use(cors())
+app.use(cors(`http://google.com`
+
+))
+
+
+
+//Authentication - Making sure the client, is who he claims to be
+app.use((req, res, next) => {
+    console.log(req.query)
+    const { apikey } = req.query;
+    if(apikey === '1234') {
+         return next()
+    }
+    res.send('You need to provide an apikey');
+})
+
+
+//Authorization  - deal with permissions, not with identifying the user
+
+
 //this "middleware" helps us get the content of the response body
 app.use(express.json())
 const { DB } = require('./DB.js');
