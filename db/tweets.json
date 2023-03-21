@@ -1,1 +1,6 @@
-[{"id":1,"text":"Some text"},{"id":2,"text":"Hello world"},{"id":3,"text":"blabla"},{"id":4,"age":"7"}]
+[
+  { "id": 1, "text": "Some text", "name" : "tweet1"},
+  { "id": 2, "text": "Hello world" , "name" : "tweet2"},
+  { "id": 3, "text": "blabla" , "name" : "tweet3"},
+  { "id": 4, "age": "7" , "name" : "tweet4"}
+]

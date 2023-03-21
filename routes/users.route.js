@@ -2,9 +2,9 @@ const express = require('express')
 const route = express.Router()
 const { DB } = require('../DB.js');
 const users = new DB('users');
-const { userSchema } = require('../dto/user.schema')
+const { userSchema, registrationSchema } = require('../dto/user.schema')
 const { validateDto } = require('../dto/validate')
-
+const { userConflictError } = require(`../lib/responseHandlers`)
 /*
 1) Get    /users
 2) Get    /user/:id
@@ -25,6 +25,24 @@ route.get('/:id', (req, res, next) => {
     }
     res.ok(users.getItemById(id))
 });
+route.post('/registration', validateDto(registrationSchema), (req, res, next) => {
+
+    //To validate that this user doesn't alredy exist
+    const { email } = req.body;
+    const usersList = users.get();
+    const user = usersList.find(u => u.email === email);
+    if(user) {
+       return next(userConflictError())
+    }
+
+
+    const newUser = users.addItem(req.body)
+    res.create(newUser)
+})
+
+
+
+
 
 route.post('/', validateDto(userSchema),(req, res) => {
     const newUser = users.addItem(req.body);

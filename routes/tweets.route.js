@@ -15,7 +15,7 @@ const tweets = new DB('tweets');
 
 
 route.get('/', (req, res) => {
-    res.send(tweets.get())
+    res.ok(tweets.get())
 });
 
 route.get('/:id', (req, res) => {

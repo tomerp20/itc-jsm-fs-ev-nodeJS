@@ -16,4 +16,10 @@ const userSchema = object({
     email:  string().email().required(),
     age: number().integer().positive()
 })
-module.exports = { userSchema }
+
+const registrationSchema = object( {
+    username: string().required().strict(),
+    password: string().required(),
+    email:  string().email().required(),
+})
+module.exports = { userSchema, registrationSchema }

@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
-//  const cors = require('cors')
-//  app.use(cors())
+const cors = require('cors')
+app.use(cors())
 const { validResponse , createdResponse } = require(`./lib/responseHandlers`)
 
 
@@ -42,7 +42,6 @@ app.use(express.json())
 
 app.use((req, res, next) => {
     res.customSend = (responseHandler) => res.status(responseHandler.status).send(responseHandler.payload)
-
     res.ok = (data) => res.customSend(validResponse(data))
     res.create = (value) => res.customSend(createdResponse(value))
     next();
