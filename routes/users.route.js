@@ -5,7 +5,7 @@ const users = new DB('users');
 const { userSchema, registrationSchema, loginSchema} = require('../dto/user.schema')
 const { validateDto } = require('../dto/validate')
 const { userConflictError } = require(`../lib/responseHandlers`)
-const jwt = require('jsonwebtoken')
+const { jwtSign } = require('../lib/jwt')
 /*
 1) Get    /users
 2) Get    /user/:id
@@ -62,7 +62,7 @@ route.post('/login',validateDto(loginSchema), (req, res, next) => {
         return next('passwords do not match')
     }
     delete user.password
-    const accessToken = jwt.sign(user, 'israel')
+    const accessToken = jwtSign(user)
     res.ok({token:accessToken})
 })
 
