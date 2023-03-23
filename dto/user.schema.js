@@ -22,4 +22,8 @@ const registrationSchema = object( {
     password: string().required(),
     email:  string().email().required(),
 })
-module.exports = { userSchema, registrationSchema }
+const loginSchema = object( {
+    username: string().required().strict(),
+    password: string().required(),
+})
+module.exports = { userSchema, registrationSchema, loginSchema }

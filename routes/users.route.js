@@ -2,9 +2,10 @@ const express = require('express')
 const route = express.Router()
 const { DB } = require('../DB.js');
 const users = new DB('users');
-const { userSchema, registrationSchema } = require('../dto/user.schema')
+const { userSchema, registrationSchema, loginSchema} = require('../dto/user.schema')
 const { validateDto } = require('../dto/validate')
 const { userConflictError } = require(`../lib/responseHandlers`)
+const jwt = require('jsonwebtoken')
 /*
 1) Get    /users
 2) Get    /user/:id
@@ -39,6 +40,32 @@ route.post('/registration', validateDto(registrationSchema), (req, res, next) =>
     const newUser = users.addItem(req.body)
     res.create(newUser)
 })
+
+//Login endpoint - what should be here?
+//Username & password - sent to the server inside the http request
+ 
+//Use validation middleware 
+//Check if the user exist - send error if the user doesn't exist
+//check if the passwords match - if not - send an error
+//We will sign the token with jsonwebtoken package
+//The token will contain all the user data expect the password
+//send the token to the client
+//res.ok(Token)
+route.post('/login',validateDto(loginSchema), (req, res, next) => {
+    const { username, password } = req.body;
+    const usersList = users.get();
+    const user = usersList.find(u => u.username === username);
+    if(!user) {
+        return next('User do not exist')
+    }
+    if(user.password !== password) {
+        return next('passwords do not match')
+    }
+    delete user.password
+    const accessToken = jwt.sign(user, 'israel')
+    res.ok({token:accessToken})
+})
+
 
 
 
