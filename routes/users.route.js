@@ -6,6 +6,8 @@ const { userSchema, registrationSchema, loginSchema} = require('../dto/user.sche
 const { validateDto } = require('../dto/validate')
 const { userConflictError } = require(`../lib/responseHandlers`)
 const { jwtSign } = require('../lib/jwt')
+const bcrypt = require('bcrypt');
+
 /*
 1) Get    /users
 2) Get    /user/:id
@@ -24,10 +26,11 @@ route.get('/:id', (req, res, next) => {
     if(id == 0) {
         return next('Invalid id')
     }
-    res.ok(users.getItemById(id))
+    const user = users.getItemById(id)
+    delete user.password;
+    res.ok(user)
 });
 route.post('/registration', validateDto(registrationSchema), (req, res, next) => {
-
     //To validate that this user doesn't alredy exist
     const { email } = req.body;
     const usersList = users.get();
@@ -35,9 +38,9 @@ route.post('/registration', validateDto(registrationSchema), (req, res, next) =>
     if(user) {
        return next(userConflictError())
     }
-
-
-    const newUser = users.addItem(req.body)
+    const { password } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const newUser = users.addItem({...req.body, password:hashedPassword})
     res.create(newUser)
 })
 
@@ -58,11 +61,12 @@ route.post('/login',validateDto(loginSchema), (req, res, next) => {
     if(!user) {
         return next('User do not exist')
     }
-    if(user.password !== password) {
-        return next('passwords do not match')
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    if(!isPasswordValid) {
+        return next('Invalid password')
     }
     delete user.password
-    const accessToken = jwtSign(user)
+    const accessToken = jwtSign({id:user.id})
     res.ok({token:accessToken})
 })
 

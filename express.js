@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 
 //Authentication - Making sure the client, is who he claims to be
 app.use((req, res, next) => {
-    const openEndpoints = ['/users/register','/users/login']
+    const openEndpoints = ['/users/registration','/users/login']
     console.log(req.url)
     if(openEndpoints.includes(req.url)) {
         return next()
